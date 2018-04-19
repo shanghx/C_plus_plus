@@ -1,0 +1,80 @@
+#include<iostream>
+using namespace std;
+#include<string.h>
+class String
+{
+    private:
+    char *ptr;
+    public:
+    String(const char *s=""):ptr(new char[strlen(s) + 1])//1.为什么要初始化列表，而没有写进函数里面   
+{
+    strcpy(ptr, s);
+}
+String(String &a)                                     //2、为什么要用& ，优点在哪
+{
+    ptr=new char[strlen(a.ptr) + 1];
+    strcpy(ptr ,a.ptr);
+}
+~String()
+{
+    if (ptr)
+    {
+        delete ptr;
+        ptr = NULL;
+    }
+}
+void print()
+{
+    cout <<ptr<<endl;
+}
+String & operator =(const String & a)
+{
+    if (this == &a)return *this;
+    delete ptr;
+    ptr = new char[strlen(a.ptr) + 1];
+    strcpy(ptr, a.ptr);
+    return *this;
+}
+String & operator+(const String & a)
+{
+    String temp;
+    temp.ptr =new char [strlen(a.ptr)+strlen(ptr)+1];
+    temp.ptr =strcat(ptr,a.ptr);
+    // strcat(temp.ptr,a.ptr);
+    return temp; 
+}
+char & operator[](int i)
+{
+    if(i<0)
+    {
+    cout<<"Bad subscript!"<<endl;exit(1);
+    }
+    return ptr[i];
+}
+    friend istream & operator>>(istream&is,const String & a);
+    friend ostream & operator<<(ostream&is,const String & a);
+};
+istream & operator>>(istream & is,const String & a)
+{
+    is>>a.ptr;
+    return is;
+}
+
+
+ostream & operator<<(ostream & os,const String & a)
+{
+    os<<a.ptr;
+    return os;
+}
+int main()
+{
+    String ob;
+    String ob1 ("hello");
+    String ob2 ("world");
+    String ob3(ob1);
+    cout<<ob2[2]<<endl;
+    cout<<ob<<endl<<ob1<<endl<<ob2<<endl<<ob3<<endl;
+    ob2 = ob1;cout<<ob1<<"  "<<ob2;
+    cout<<ob1+ob2<<endl;
+    return 0;
+}
