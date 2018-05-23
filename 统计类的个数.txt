@@ -1,0 +1,28 @@
+/*2.	利用静态数据成员的概念，编写一个类，可以统计目前存在多少个该类的对象，并在主程序中使用这个类。*/
+
+#include<iostream>
+using namespace std;
+class A
+{
+	private:
+		int x,y;	static int count;
+	public:
+		A(char *a,int i)
+		{
+			x=a;y=b;count++;
+		}
+	static int count()
+	{
+		return count;
+	}
+		
+};
+int count=0;
+int main()
+{
+	for(int i=0;i<10;i++)
+	A ob(a);
+	A ob1(1,2);A ob2(3,4);
+	cout<<endl;
+	return 0;
+}
