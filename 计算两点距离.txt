@@ -1,0 +1,33 @@
+/*.	设计一个点类Point，其中包含点的坐标x和y 共2个数据成员，并设计1个友元函数，计算两点间的距离,并编写程序测试。*/
+#include<iostream>
+using namespace std;
+#include<math.h>
+class point
+{
+	private: 
+		int x,y;
+	 public:
+	 	point(int x1=0,int y1=0)
+	 	{
+	 		x=x1;
+	 		y=y1;
+	 		
+		 }
+		 friend float count(point &a,point &b);
+ } ;
+ float count (point &a,point &b)
+ {
+ 	float distance;
+ 	int m,n;
+ 	m=a.x>b.x?a.x-b.x:b.x-a.x;
+ 	n=a.y>b.y?a.y-b.y:b.y-a.y;
+ 	distance=sqrt(m*m+n*n);
+ 	return distance;
+ }
+int main()
+{
+	point ob1(0,0);
+	point ob2(1,1);
+	cout<<"两点间的距离是:"<<count(ob1,ob2)<<endl;
+	return 0;
+}
