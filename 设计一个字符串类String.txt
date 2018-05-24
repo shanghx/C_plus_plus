@@ -1,0 +1,57 @@
+/*3.设计一个字符串类String。并使其能完成以下功能：
+（1）能使用“=”运算符完成两个字符串的赋值。
+（2）能使语句  String p3(p1)正常运行。
+（3）能使用“+”完成两个字符串的拼接。*/
+#include<iostream>
+using namespace std;
+#include<string.h>
+class String
+{
+	private:
+		char *ptr;
+	public:
+		String (char *s="")
+		{
+			ptr=new char[strlen(s)+1];
+			strcpy(ptr,s);
+		}
+		String(String & a)
+		{
+			
+			ptr=new char[strlen(a.ptr)+1];
+			strcpy(ptr,a.ptr);
+		}
+		String &operator=(String &a)
+		{
+			if(this==&a);return *this;
+			delete ptr;
+			ptr=new char [strlen(a.ptr)+1];
+			strcpy(ptr,a.ptr);
+			return *this;
+		}
+		String &operator+(String &a)
+		{
+			
+		ptr=new char [strlen(a.ptr)+1];
+			strcat(ptr,a.ptr);
+			//return *this;
+		}
+		void print()
+		{
+			cout<<ptr<<endl;
+		}
+};
+int main()
+{
+	String ob1("chen");String ob4;
+	String ob2(" li");ob4=(ob1+ob2);
+	ob4.print();
+	ob2=ob1;
+	ob1.print();
+	ob2.print();
+	String ob3(ob1);	ob1.print(); ob3.print();
+	
+	
+	
+	return 0;
+}
