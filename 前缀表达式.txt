@@ -1,0 +1,60 @@
+#include<iostream>
+using namespace std;
+int add(int x,int y)
+{
+	return x+y;
+}
+int sub(int x,int y)
+{
+	return x-y;
+}
+int mul(int x,int y)
+{
+	return x*y;
+}
+int div(int x,int y)
+{
+	if(y==0)return 0;
+	return x/y;
+}
+int main()
+{
+	string arr;
+	int a,b, result;
+	getline(cin,arr);
+	if(arr[3]==' ')
+	{
+		if(arr[5]=='\0')
+		{
+			a=arr[2]-'0';
+			b=arr[4]-'0';
+		}
+		else 
+		{
+			a=arr[2]-'0';
+			b=10;
+		}
+	}
+	else
+	{
+		if(arr[6]=='\0')
+		{
+			a=10;
+			b=arr[5]-'0';
+		}
+		else 
+		{
+			a=10;b=10;
+		}
+	}
+	switch (arr[0])
+	{
+		case '+':result=add(a,b);break;
+		case '-':result=sub(a,b);break;
+		case '*':result=mul(a,b);break;
+		case '/':result=div(a,b);break;
+		default :return 0;
+	 }
+	 cout<<result;
+	 return 0;	
+}
