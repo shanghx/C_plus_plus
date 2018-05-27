@@ -1,0 +1,49 @@
+#include<iostream>
+using namespace std;
+int main()
+{
+	int n,count=0,a,b,c,d,e,f,g,h,i,j;
+	cin>>n;
+	for(a=0;a<10;a++)
+	{
+		for(b=0;b<10;b++)
+		{
+			for(c=0;c<10;c++)
+			{
+				for(d=0;d<0;d++)
+				{
+					for(e=0;e<10;e++)
+					{
+						for(f=0;f<10;f++)
+						{
+							for(g=0;g<10;g++)
+							{		
+								for(h=0;h<10;h++)
+								{
+									for(i=0;i<10;i++)
+									{
+										for(j=0;j<10;j++)
+										{
+											if(a!=b&&b!=c&&c!=d&&d!=e&&e!=f&&f!=g&&g!=h&&h!=i&&i!=j)
+											{
+												count++;cout<<count;
+												if(count==n)
+												{
+													cout<<a<<b<<c<<d<<e<<f<<g<<h<<i<<j;
+													break;
+												}
+											}
+											
+										}
+	
+									}	
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return 0;
+}
