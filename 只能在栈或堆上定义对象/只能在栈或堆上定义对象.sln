@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2016
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "只能在栈或堆上定义对象", "只能在栈或堆上定义对象\只能在栈或堆上定义对象.vcxproj", "{64966E01-5119-4AD8-9329-264BB6A9398B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{64966E01-5119-4AD8-9329-264BB6A9398B}.Debug|x64.ActiveCfg = Debug|x64
+		{64966E01-5119-4AD8-9329-264BB6A9398B}.Debug|x64.Build.0 = Debug|x64
+		{64966E01-5119-4AD8-9329-264BB6A9398B}.Debug|x86.ActiveCfg = Debug|Win32
+		{64966E01-5119-4AD8-9329-264BB6A9398B}.Debug|x86.Build.0 = Debug|Win32
+		{64966E01-5119-4AD8-9329-264BB6A9398B}.Release|x64.ActiveCfg = Release|x64
+		{64966E01-5119-4AD8-9329-264BB6A9398B}.Release|x64.Build.0 = Release|x64
+		{64966E01-5119-4AD8-9329-264BB6A9398B}.Release|x86.ActiveCfg = Release|Win32
+		{64966E01-5119-4AD8-9329-264BB6A9398B}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5BA7B0C7-0A0E-4556-AEDF-CCB2D5AEA3A0}
+	EndGlobalSection
+EndGlobal
