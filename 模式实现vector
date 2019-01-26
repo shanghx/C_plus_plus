@@ -1,0 +1,246 @@
+#include<iostream>
+#include<assert.h>
+#include<string>
+using namespace std;
+
+namespace V
+{
+	template<class T>
+	class Vector
+	{
+	public:
+		//vector的迭代器是一个原生指针
+		typedef T* Iterator;
+		typedef const T* ConstIterator;
+
+		Iterator Begin()
+		{
+			return _start;
+		}
+		Iterator End()
+		{
+			return _finish;
+
+		}
+
+		ConstIterator CBegin() const
+		{
+			return _start;
+		}
+		ConstIterator CEnd() const
+		{
+			return _finish;
+		}
+
+		size_t Size() const //获取size
+		{
+			return _finish - _start;
+		}
+		//获取capacity
+		size_t Capacity() const
+		{
+			return _endOfStorage - _start;
+		}
+
+		//构造函数
+		Vector()
+			:_start(nullptr)
+			, _finish(nullptr)
+			, _endOfStorage(nullptr)
+		{
+
+		}
+
+		Vector(int n, const T& value = T())//单值构造
+			:_start(nullptr)
+			, _finish(nullptr)
+			, _endOfStorage(nullptr)
+		{
+			Reserve(n);
+			while (n--)
+			{
+				PushBack(value);
+			}
+		}
+
+		Vector(Iterator first, Iterator last)//区间构造
+		{
+			//先开空间
+			Reserve(last - first);
+			while (first != last)
+			{
+				PushBack(*first);
+				++first;
+			}
+		}
+
+		Vector(const Vector<int>& v)//拷贝构造函数
+			:_start(nullptr)
+			, _finish(nullptr)
+			, _endOfStorage(nullptr)
+		{
+			Reserve(v.Capacity());//先开空间
+			Iterator it = Begin();//返回新开空间的首地址
+			ConstIterator vit = v.CBegin();
+			while (vit != v.CEnd())
+			{
+				*it++ = *(vit++);//进行赋值
+			}
+			_finish = _start + v.Size();//更新size
+			_endOfStorage = _start + v.Capacity();//更新capacity
+		}
+
+		//赋值运算符
+		Vector<T>& operator= (Vector<T> v)
+		{
+			//新写法
+			Swap(v);
+			return *this;
+		}
+
+		//析构函数
+		~Vector()
+		{
+			delete[]_start;
+			_start = _finish = _endOfStorage = nullptr;
+		}
+
+		/////////////////////////////////////
+		//操作函数
+
+		void Reserve(size_t n)//扩容
+		{
+			if (n > Capacity())
+			{
+				size_t size = Size();
+				T*tmp = new T[n];
+
+				//赋值
+				if (_start)
+				{
+					for (size_t i = 0; i < size; i++)
+					{
+						tmp[i] = _start[i];
+					}
+				}
+				//更新
+				//delete[] _start;
+				//_start = nullptr;
+				_start = tmp;
+				_finish = _start + size;
+				_endOfStorage = _start + n;
+			}
+		}
+
+		void Resize(size_t n, const T& value = T())
+		{
+			//1.如果n小于当前的size，则数据个数缩小到n
+			if (n <= Size())
+			{
+				_finish = _stat + n;
+				return;
+			}
+			//2.如果n>capacity，则应该增容
+			if (n > Capacity)
+			{
+				Reserve(n);//调用增容函数
+			}
+			//3.size<n<=capapity 说明只需要更新size
+			Iterator it = _finish;
+			Iterator _finish = _start + n;
+			while (it != _finish)
+			{
+				*it = value;
+				++it;
+			}
+		}
+
+		void Swap(Vector<T>& v)
+		{
+			swap(_start, v._start);
+			swap(_finish, v._finish);
+			swap(_endOfStorage, v._endOfStorage);
+		}
+
+		//尾插
+		void PushBack(const T& x)
+		{
+			//调用Insert
+			Insert(End(), x);
+		}
+
+		//尾删
+		void PopBack()
+		{
+			//调用Earse
+			Erase(--End());
+		}
+
+		//随机插入Insert
+		Iterator Insert(Iterator pos, const T& x)
+		{
+			assert(pos <= _finish);
+			Iterator tmp = pos;
+			if (_finish == _endOfStorage)
+			{
+				//有两种情况，
+				//1.如果此时没有元素
+				//2.此时元素已满
+				size_t size = Size();
+				size_t newCapacity = Capacity() == 0 ? 1 : Capacity() * 2;
+
+				Reserve(newCapacity);//已经将原数据搬移到新空间
+
+			
+			//如果发生增容，需要重置pos
+				pos = _start + size;
+			}
+				
+				//将pos后的元素后移一位
+				Iterator end = _finish - 1;
+				while (end >= pos)
+				{
+					(*(end + 1)) = *end;
+					--end;
+				}
+				//在pos前插入数据,所以要将pos位置的元素后移
+				*pos = x;
+				++_finish;
+				
+				//pos = nullptr;
+				return pos;//所以如果在增容的情况下Insert，迭代器就会失效
+			
+		}
+
+		//任意位置Earse
+		Iterator Erase(Iterator &pos)
+		{
+			assert(pos < _finish);
+			Iterator tmp = pos;
+			//先搬移数据
+			Iterator begin = pos + 1;
+			while (begin != _finish)
+			{
+				*(begin - 1) = *begin;
+				++begin;
+			}
+			--_finish;
+			pos = nullptr;
+			return tmp;
+			//return nullptr;
+		}
+
+		//重载[]
+		T& operator [](size_t pos)
+		{
+			assert(pos < _finish-_start);
+			//cout << _finish - _start;
+			return _start[pos];
+		}
+	private:
+		//左闭右开空间
+		Iterator _start;//指向有效数据的开始
+		Iterator _finish;//指向有效数据的尾
+		Iterator _endOfStorage;//指向存储容量的尾
+	};
+}
