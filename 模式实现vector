@@ -180,7 +180,6 @@ namespace V
 		Iterator Insert(Iterator pos, const T& x)
 		{
 			assert(pos <= _finish);
-			Iterator tmp = pos;
 			if (_finish == _endOfStorage)
 			{
 				//有两种情况，
@@ -206,14 +205,12 @@ namespace V
 				//在pos前插入数据,所以要将pos位置的元素后移
 				*pos = x;
 				++_finish;
-				
-				//pos = nullptr;
 				return pos;//所以如果在增容的情况下Insert，迭代器就会失效
 			
 		}
 
 		//任意位置Earse
-		Iterator Erase(Iterator &pos)
+		Iterator Erase(Iterator pos)
 		{
 			assert(pos < _finish);
 			Iterator tmp = pos;
@@ -225,9 +222,7 @@ namespace V
 				++begin;
 			}
 			--_finish;
-			pos = nullptr;
-			return tmp;
-			//return nullptr;
+			return pos;
 		}
 
 		//重载[]
