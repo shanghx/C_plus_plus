@@ -1,0 +1,21 @@
+class Singleton
+{
+public:
+	//提供创建对象的接口
+	static Singleton* GetInstance()
+	{
+		return m_pInstance;
+	}
+private:
+	//构造函数私有
+	Singleton()
+	{};
+	
+	//防拷贝,拷贝构造和赋值私有，只声明不定义
+	Singleton(Singleton const &);
+	Singleton& operator=(Singleton const &);
+
+	static Singleton* m_pInstance;//单例对象指针
+};
+Singleton* Singleton::m_pInstance=new Singleton;
+
