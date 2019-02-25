@@ -1,0 +1,239 @@
+#include <iostream>
+#include <queue>
+#include <unistd.h>
+#include <stdlib.h>
+#include <pthread.h>
+using namespace std;
+#define NUM 8
+
+
+//存放数据的缓冲池
+class BlockQueue
+{
+    private:
+        std::queue<int> q;
+        int cap;//缓冲池的容量大小
+        pthread_mutex_t lock;
+        pthread_cond_t full;
+        pthread_cond_t empty;
+        int pthread_pro_sum;//生产者线程总数
+        int pthread_con_sum;//消费者线程总数
+        bool is_quit;
+    private:
+
+        void LockQueue()
+        {
+            pthread_mutex_lock(&lock);
+        }
+
+        void UnLockQueue()
+        {
+            pthread_mutex_unlock(&lock);
+        }
+
+        void ProductWait()  //生产者睡眠
+        {
+          if(is_quit)
+          {
+            pthread_pro_sum--;
+            UnLockQueue();//解锁
+            cout<<"一个生产者线程退出..."<<endl;
+            pthread_exit((void*)0);
+          }
+            pthread_cond_wait(&full, &lock);
+        }
+
+        void ConsumeWait()  //消费者睡眠
+        {
+          if(is_quit)
+          {
+            pthread_con_sum--;
+            //解锁
+            UnLockQueue();
+            cout<<"一个消费者线程退出..."<<endl;
+            pthread_exit((void*)0);
+          }
+            pthread_cond_wait(&empty, &lock);
+        }
+
+        void NotifyProduct()  //唤醒一个生产者
+        {
+            pthread_cond_signal(&full);
+        }
+
+        void NotifyConsume()  //唤醒一个消费者
+        {
+            pthread_cond_signal(&empty);
+        }
+
+        bool IsEmpty()
+        {
+            return ( q.size() == 0 ? true : false );
+        }
+
+        bool IsFull()
+        {
+            return ( q.size() == cap ? true : false );
+        }
+
+    public:
+        BlockQueue(int _cap = NUM)
+          :cap(_cap)
+          ,is_quit(false)
+          ,pthread_con_sum(0)
+          ,pthread_pro_sum(0)
+        {
+            pthread_mutex_init(&lock, NULL);
+            pthread_cond_init(&full, NULL);
+            pthread_cond_init(&empty, NULL);
+        }
+
+        void PushData(const int &data)  //生产数据
+        {
+            LockQueue();
+            while(IsFull()){
+        //          NotifyConsume();
+                std::cout << "Queue is full,Product is waiting." << std::endl;
+                ProductWait();
+            }
+            q.push(data);
+            NotifyConsume();
+            UnLockQueue();
+        }
+
+        void PopData(int &data) // 消费数据
+        {
+            LockQueue();
+            while(IsEmpty()){
+           //       NotifyProduct();
+                std::cout << "Queue is empty,Consume is waiting." << std::endl;
+                ConsumeWait();
+            }
+            data = q.front();
+            q.pop();
+            NotifyProduct();
+            UnLockQueue();
+        }
+
+        void Stop() //结束生产消费过程
+        {
+          LockQueue();
+          is_quit = true;
+          UnLockQueue();
+          if(pthread_con_sum > 0)
+          {
+            cout<<"Consumer thread is:"<<pthread_con_sum<<endl;
+            pthread_cond_broadcast(&empty);
+          }
+          if(pthread_pro_sum > 0)
+          {
+            cout<<"Producter thread is:"<<pthread_pro_sum<<endl;
+            pthread_cond_broadcast(&empty);
+          }
+          cout<<endl;
+          return ;
+        }
+
+        bool Quit() //判断线程是否全部退出
+        {  
+          if(pthread_con_sum == 0 && pthread_pro_sum == 0)
+            return true;
+          else return false;
+        }
+
+        void SetConsumSum(int n)  //设置消费者线程总数
+        {
+          LockQueue();
+          pthread_con_sum = n;
+          UnLockQueue();
+        }
+
+        void SetProductSum(int n) //设置生产者线程总数
+        {
+          LockQueue();
+          pthread_pro_sum = n;
+          UnLockQueue();
+        }
+
+        ~BlockQueue()
+        {
+            pthread_mutex_destroy(&lock);
+            pthread_cond_destroy(&full);
+            pthread_cond_destroy(&empty);
+        }
+};
+
+void *consumer(void *arg) //消费者
+{
+    pthread_detach(pthread_self());
+    BlockQueue *bqp = (BlockQueue*)arg;
+    int data;
+    for( ; ; ){
+        bqp->PopData(data);
+        std::cout << "Consume data done : " << data << std::endl;
+        sleep(1);
+    }
+}
+
+
+void *producter(void *arg)  //生产者
+{
+    pthread_detach(pthread_self());
+    BlockQueue *bqp = (BlockQueue*)arg;
+    srand((unsigned long)time(NULL));
+    for( ; ; ){
+        int data = rand() % 1024;
+        bqp->PushData(data);
+        std::cout << "Prodoct data done: " << data << std::endl;
+        
+     sleep(1);
+    }
+}
+
+int main()
+{
+    BlockQueue bq;
+    pthread_t c;
+    //创建一个消费者线程
+    if(pthread_create(&c, NULL, consumer, (void*)&bq)!=0)
+    {
+      cout<<" create faild"<<endl;
+      return 1;
+    }
+    else 
+      bq.SetConsumSum(1);
+
+    //创建3个生产者线程
+    for(int i=0;i<3;i++)
+    {
+      pthread_t p;
+      if(pthread_create(&p, NULL, producter, (void*)&bq)!=0)
+      {
+        cout<<"create p faild"<<endl;
+        return 1;
+      }
+    }
+    bq.SetProductSum(3);
+
+      // 过程执行10秒,线程开始退出
+      sleep(10);
+      cout<<"线程开始退出..."<<endl;
+      bq.Stop();
+      
+      //等待所有线程退出，主进程再退出
+      while(1)
+      {
+        if(bq.Quit())
+        {
+          cout<<"thread is all quit"<<endl;
+          break;
+        }
+      }
+    //所有线程都退出后,等5秒主进程退出
+    cout<<"所有线程全部退出..."<<endl;
+      sleep(5);
+      // pthread_join(c, NULL);
+     // pthread_join(p, NULL);
+    return 0;
+}
+
