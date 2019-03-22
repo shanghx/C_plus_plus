@@ -1,0 +1,48 @@
+#include<iostream>
+using namespace std;
+
+class A
+{
+public:
+	static bool Is(int count)
+	{
+		int i = count - 1;
+		int tmp = 0;
+		for (; i >= 1; i--)
+		{
+			if (count%i == 0)
+			{
+				tmp = tmp + i;
+			}
+			
+		}
+		if (tmp == count)
+		{
+			return true;
+		}
+		else
+			return false;
+	}
+
+	static int count(int n)
+	{
+		int ret = 0;
+		for (int i = 1; i <= n; i++)
+		{
+			if (Is(i))
+				ret++;
+		}
+		return ret;
+	}
+};
+int main()
+{
+	A a;
+	int n;
+	while (cin >> n)
+	{
+		cout<<a.count(n)<<endl;
+	}
+	system("pause");
+	return 0;
+}
