@@ -1,0 +1,77 @@
+#include<iostream>
+using namespace std;
+#include<stack>
+#include<string>
+
+class A
+{
+public:
+	string AddLongther(string a, string b)
+	{
+		int count1 = a.size();
+		int count2 = b.size();
+		int tmp = count1 - count2;
+		if (tmp > 0)
+		{
+			//b.clear();
+			string s(tmp, '0');
+			s += b;
+			b = s;
+		}
+		if (tmp < 0)
+		{
+			tmp *= -1;
+			string s(tmp, '0');
+			s += a;
+			a = s;
+		}
+		//cout << a << endl << b << endl;
+		int max = count1 > count2 ? count1 : count2;
+		int ret = 0;
+		int flag = 0;
+		char c;
+		string str;
+		stack<char> s;
+		int sum = 0;
+		for (int i = max-1; i >=0; i--)
+		{
+			 sum = a[i] - '0' + b[i] - '0' ;
+			if (flag == 1)
+			{
+				sum++;
+			}
+			ret = sum % 10;
+			c = '0' + ret;
+			s.push(c);
+
+			if (sum >= 10)
+				flag = 1;
+			else 
+			{
+				flag = 0;
+			}
+		}
+		if (flag == 1)
+			s.push('1');
+		while (!s.empty())
+		{
+			str += s.top();
+			s.pop();
+		}
+		return str;
+		
+	}
+};
+
+int main()
+{
+	string a, b;
+	A p;
+	while (cin >> a >> b)
+	{
+		cout<<p.AddLongther(a, b)<<endl;
+		
+	}
+	system("pause");
+	return 0;
+}
