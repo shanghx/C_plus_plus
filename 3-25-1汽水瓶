@@ -1,0 +1,38 @@
+#include<iostream>
+using namespace std;
+
+int main()
+{
+	int a[100];
+	int ret[100];
+	int n;
+	int i = 0;
+	int m = 0;
+	//while (1)
+	{
+		while (cin >> n)
+		{
+			if (n != 0)
+			{
+				a[i++] = n;
+			}
+			else
+			{
+				break;
+			}
+
+		}
+		m = i;
+		for (int i = 0; i < m; i++)
+		{
+			ret[i] = a[i] / 2;
+		}
+		for (int i = 0; i < m; i++)
+		{
+			cout << ret[i] << endl;
+		}
+	}
+	
+	system("pause");
+	return 0;
+}
