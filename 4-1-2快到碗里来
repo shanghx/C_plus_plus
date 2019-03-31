@@ -1,0 +1,21 @@
+#include<iostream>
+using namespace std;
+
+int main()
+{
+	long double n, m;
+	while (cin >> n >> m)
+	{
+		long double ret = 2 * 3.14 * m;
+		if (n > ret)
+		{
+			cout << "No" << endl;
+		}
+		else
+		{
+			cout << "Yes" << endl;
+		}
+	}
+	system("pause");
+	return 0;
+}
