@@ -1,0 +1,31 @@
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+float foo() {}
+void func(vector<string> & tmp)
+{
+	//4.推到容器的类型，auto自动推到类型为vector<string>,写起来方便
+	for (auto i = tmp.begin(); i < tmp.end(); i++)
+	{
+		// 函数体
+	}
+}
+
+int main()
+{
+//1.推到变量的类型
+auto x = 1; // x的类型为 int
+
+//2.推到函数返回值的类型
+auto y = foo(); // y 的类型为 float
+
+//3.推到自定义结构体的类型
+struct Test
+{
+  int i;
+}str;
+auto str1 = str; // str1 的类型是 struct Test
+
+return 0;
+}
