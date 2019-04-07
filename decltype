@@ -1,0 +1,47 @@
+#include<iostream>
+#include<stdlib.h>
+using namespace std;
+#include<vector>
+#include<typeinfo>
+
+int main()
+{
+	int i = 0;
+	//1.如果我们要获取i的类型，就可以用decltype来获取，并且可以定义出对象
+	decltype(i) j = 1;
+	cout << j << endl;
+
+	//2.如果我们想要看i的类型是什么，可以用typeid函数打印出来
+	cout << typeid(i).name() << endl;
+
+	//3.decltype的参数可以是表达式
+	float a;
+	double b;
+	decltype(a + b) c;
+	cout << typeid(c).name() << endl;
+
+	//4.可以用于模板
+	vector<int> v;
+	decltype(v) v1;
+	cout << typeid(v1).name() << endl;
+
+	//5.可以用于匿名类型的枚举或结构体变量
+	enum 
+	{
+		BLUE,
+		GREEN
+	}flag1;//这种情况下只能定义一个flag对象，因为enum没有写出类型名,不能再定义出对象
+	struct
+	{
+		int a;
+		float b;
+		double c;
+	}flag2;//这种情况下只能定义一个flag对象，因为enum没有写出类型名,不能再定义出对象
+
+	//获取类型后，可以定义出对象
+	decltype(flag1) e;
+	decltype(flag2) s;
+
+	system("pause");
+	return 0;
+}
