@@ -1,0 +1,82 @@
+//编写程序，要求能够正确解析redis协议的字符串，并自证其正确性。
+//比如，当输入是"+OK\r\n"时，应该解析成正确结果"OK"; 
+//当输入是":1000\r\n"，应该解析成正确结果1000。
+//使用语言不限，使用方法不限。 完成后上传到github，并附上简短的文档说明。
+
+#include<iostream>
+using namespace std;
+#include<string>
+#include<vector>
+
+string str_err_int(string str)//处理简单字符串和error和整形
+{
+	//错误处理
+	string nul;//空字符串
+	if (str.size() == 0)
+	{
+		return nul;
+	}
+
+	//把剩余的字符串保留下
+	string ret;
+	size_t pos = str.find("\\r\\n");
+	if (pos == string::npos)
+	{
+		cout << "源字符串不合法" << endl;
+		return nul;
+	}
+	ret = str.substr(1, pos - 1);
+	return ret;
+}
+string str_block(string str)//处理字符块
+{
+	//错误处理
+	string nul;
+	if (str.size() == 0)
+	{
+		return nul;
+	}
+	size_t pos1 = str.find("\\r\\n");
+	if (pos1 == string::npos)
+	{
+		cout << "源字符串不合法" << endl;
+		return nul;
+	}
+	pos1 = pos1 + 4;
+	size_t pos2 = str.find("\\r\\n", pos1);
+	if (pos2 == string::npos)
+	{
+		return "NULL";
+	}
+
+	string ret;
+	ret = str.substr(pos1, pos2 - pos1);
+	return ret;
+}
+
+int main()
+
+{
+	string str;
+	while (getline(cin,str))
+	{
+
+		if (str[0] == '+' || str[0] == '-' || str[0] == ':')
+		{
+			cout << str_err_int(str) << endl;
+			continue;
+		}
+		else if (str[0] == '$')
+		{
+			cout<<str_block(str)<<endl;
+			continue;
+		}
+		else
+		{
+			cout << "待处理的字符串不合法" << endl;
+			continue;
+		}
+	}
+	system("pause");
+	return 0;
+}
